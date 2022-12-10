@@ -1,0 +1,5 @@
+mingw-w64-i686-git 2.38.1.1.b85c8f604d-1 955fbbce556862253a0e603590de03db2da7e73b
+mingw-w64-i686-git 2.35.3.1.b952ed2af6-1 git-2.35.3
+
+mingw-w64-x86_64-git 2.38.1.1.b85c8f604d-1 4f7c440fe9982f1e451c6cc351de6c5f4323e940
+mingw-w64-x86_64-git 2.35.3.1.b952ed2af6-1 git-2.35.3

@@ -4,21 +4,21 @@ https://wiki.archlinux.org/index.php/Pacman#.22Failed_to_commit_transaction_.28c
 
 Without those metadata files, you don't know the exact collection and version of the msys2 packages Google selected to build a release of those 2 flavors of Git. If you force to install or copy the current version of msys2 packages, you run the risk of version mismatch with git binaries Google built and tested.
 
-Well, that's until I discover this file: /etc/package-versions.txt, the laundry list of matching msys2 packages and versions. Now there is a definitive source in github. Here is how I restore pacman in Portable Git:
+Well, that's until I discover this file: /etc/package-versions.txt, the laundry list of matching msys2 packages and versions. Now there is a definitive source in github. Here is how I restore pacman in [Portable Git 2.35.3-32-bit][4] (see Dec 8, 2022 comment):
 
-Step 1: Run these commands to download /etc/pacman.conf and 3 packages: [pacman][1], [pacman-mirrors][2] and [msys2-keyring][3]. These are .xz packages before msys2 switched to zstd. See my comment below.
+Step 1: Run these commands to download /etc/pacman.conf and 3 packages: [pacman][1], [pacman-mirrors][2] and [msys2-keyring][3]. These are .xz packages before msys2 switched to zstd. See my Jul 8, 2021 comment below.
 
     curl https://raw.githubusercontent.com/msys2/MSYS2-packages/7858ee9c236402adf569ac7cff6beb1f883ab67c/pacman/pacman.conf -o /etc/pacman.conf
-    for f in pacman-5.2.2-4-x86_64 pacman-mirrors-20201028-1-any msys2-keyring-1~20201002-1-any; 
-     do curl https://repo.msys2.org/msys/x86_64/$f.pkg.tar.xz -o ~/Downloads/$f.pkg.tar.xz;
+    for f in pacman-5.2.2-4-i686 pacman-mirrors-20200329-1-any msys2-keyring-r21.b39fb11-1-any;
+     do curl https://repo.msys2.org/msys/i686/$f.pkg.tar.xz -fo ~/Downloads/$f.pkg.tar.xz;
     done
 
 Step 2: Unpack them at the root then restore pacman with these commands:
 
     cd /
-    tar x --xz -vf ~/Downloads/msys2-keyring-1~20201002-1-any.pkg.tar.xz usr
-    tar x --xz -vf ~/Downloads/pacman-mirrors-20201028-1-any.pkg.tar.xz etc
-    tar x --xz -vf ~/Downloads/pacman-5.2.2-4-x86_64.pkg.tar.xz usr
+    tar x --xz -vf ~/Downloads/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz usr
+    tar x --xz -vf ~/Downloads/pacman-mirrors-20200329-1-any.pkg.tar.xz etc
+    tar x --xz -vf ~/Downloads/pacman-5.2.2-4-i686.pkg.tar.xz usr
     mkdir -p /var/lib/pacman
     pacman-key --init
     pacman-key --populate msys2
@@ -26,9 +26,9 @@ Step 2: Unpack them at the root then restore pacman with these commands:
 
 Step 3: The next two commands restore all matching metadata. The second command is multi-line but still safe to cut and paste (be patient):
 
-    URL=https://github.com/git-for-windows/git-sdk-64/raw/main
+    URL=https://github.com/git-for-windows/git-sdk-32/raw/git-2.35.3
     cat /etc/package-versions.txt | while read p v; do d=/var/lib/pacman/local/$p-$v;
-     mkdir -p $d; echo $d; for f in desc files install mtree; do curl -sSL "$URL$d/$f" -o $d/$f;
+     mkdir -p $d; echo $d; for f in desc files mtree; do curl -fsSL "$URL$d/$f" -o $d/$f;
      done; done
 
 Step 4: Now, is it too much to ask for 'make' and 'zip'?
@@ -37,7 +37,8 @@ Step 4: Now, is it too much to ask for 'make' and 'zip'?
 
 Voilà, still just a 337MB mean little environment that can expand and upgrade!
 
-  [1]: https://repo.msys2.org/msys/x86_64/pacman-5.2.2-4-x86_64.pkg.tar.xz
-  [2]: https://repo.msys2.org/msys/x86_64/pacman-mirrors-20201028-1-any.pkg.tar.xz
-  [3]: https://repo.msys2.org/msys/x86_64/msys2-keyring-1~20201002-1-any.pkg.tar.xz
+  [1]: https://repo.msys2.org/msys/i686/pacman-5.2.2-4-i686.pkg.tar.xz
+  [2]: https://repo.msys2.org/msys/i686/pacman-mirrors-20200329-1-any.pkg.tar.xz
+  [3]: https://repo.msys2.org/msys/i686/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+  [4]: https://github.com/git-for-windows/git/releases/download/v2.35.3.windows.1/PortableGit-2.35.3-32-bit.7z.exe
 

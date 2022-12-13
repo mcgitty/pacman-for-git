@@ -24,12 +24,9 @@ Step 2: Unpack them at the root then restore pacman with these commands:
     pacman-key --populate msys2
     pacman -Syu
 
-Step 3: The next two commands restore all matching metadata. The second command is multi-line but still safe to cut and paste (be patient):
+Step 3: The next command restores all matching metadata. Be patient, warnings or errors on a few packages can be ignored:
 
-    URL=https://github.com/git-for-windows/git-sdk-32/raw/git-2.35.3
-    cat /etc/package-versions.txt | while read p v; do d=/var/lib/pacman/local/$p-$v;
-     mkdir -p $d; echo $d; for f in desc files mtree; do curl -fsSL "$URL$d/$f" -o $d/$f;
-     done; done
+    cat /etc/package-versions.txt | while read p v; do pacman -S --dbonly --noconfirm $p; done
 
 Step 4: Now, is it too much to ask for 'make' and 'zip'?
 

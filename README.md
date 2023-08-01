@@ -1,5 +1,5 @@
 # pacman-for-git
-Facilitate installing pacman in [Git for Windows](https://github.com/git-for-windows/git/releases).
+Facilitate installing pacman in [Git for Windows](https://github.com/git-for-windows/git/releases), started from this [StackOverflow answer](https://stackoverflow.com/a/65204171).
 
 ## How to Update version-tags.txt
 

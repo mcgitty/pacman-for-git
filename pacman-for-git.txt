@@ -23,16 +23,16 @@ Step 1: Run these commands to download /etc/pacman.conf and 3 packages: pacman, 
     "
      zstd=zstd-1.5.2-1-x86_64.pkg.tar.xz
     fi
+    curl https://raw.githubusercontent.com/msys2/MSYS2-packages/7858ee9c236402adf569ac7cff6beb1f883ab67c/pacman/pacman.conf -o /etc/pacman.conf
     for f in $pacman; do curl https://repo.msys2.org/msys/$HOSTTYPE/$f -fo ~/Downloads/$f; done
     curl -L https://github.com/mcgitty/pacman-for-git/raw/main/$zstd -o ~/Downloads/$zstd
-    curl https://raw.githubusercontent.com/msys2/MSYS2-packages/7858ee9c236402adf569ac7cff6beb1f883ab67c/pacman/pacman.conf -o /etc/pacman.conf
 
 Step 2: Unpack them at the root then restore pacman with these commands:
 
     cd /
     tar x --xz -vf ~/Downloads/$zstd usr
     for f in $pacman; do tar x --zstd -vf ~/Downloads/$f usr etc 2>/dev/nul; done
-    mkdir -p /var/lib/pacman
+    mkdir -p /var/lib/pacman; ln -s `which gettext` /usr/bin/
     pacman-key --init
     pacman-key --populate msys2
     pacman -Syu
@@ -46,13 +46,13 @@ Step 3: The next set of commands restore all matching metadata (be patient). Lik
     URL=https://github.com/git-for-windows/git-sdk-$b/raw/${t##* }
     cat /etc/package-versions.txt | while read p v; do d=/var/lib/pacman/local/$p-$v;
      mkdir -p $d; echo $d; for f in desc files mtree; do curl -fsSL "$URL$d/$f" -o $d/$f;
-     done; [[ ! -f $d/desc ]] && rmdir $d; done
+     done; [[ ! -f $d/desc ]] && rmdir $d && echo Missing $d; done
 
 Step 4: Now, is it too much to ask for 'make' and 'zip'?
 
     pacman -S make zip
 
-Voil√†, still just a 337MB mean little environment that can expand and upgrade!
+Voil‡, still just a 337MB mean little environment that can expand and upgrade!
 
 [1]: https://stackoverflow.com/posts/comments/131906952?noredirect=1
 [2]: https://github.com/mcgitty/pacman-for-git

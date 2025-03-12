@@ -24,8 +24,7 @@ Step 1: Run these commands to download /etc/pacman.conf and 3 packages: pacman, 
      zstd=zstd-1.5.2-1-x86_64.pkg.tar.xz
     fi
     curl https://raw.githubusercontent.com/msys2/MSYS2-packages/7858ee9c236402adf569ac7cff6beb1f883ab67c/pacman/pacman.conf -o /etc/pacman.conf
-    for f in $pacman; do curl https://repo.msys2.org/msys/$HOSTTYPE/$f -fo ~/Downloads/$f; done
-    curl -L https://github.com/mcgitty/pacman-for-git/raw/main/$zstd -o ~/Downloads/$zstd
+    for f in $pacman $zstd; do curl -L https://github.com/mcgitty/pacman-for-git/raw/main/$f -o ~/Downloads/$f; done
 
 Step 2: Unpack them at the root then restore pacman with these commands:
 
